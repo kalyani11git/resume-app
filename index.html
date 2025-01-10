@@ -70,9 +70,10 @@
         <div class="personal-details" style="background-color: #57697a; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
           <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
             <img id="resumeProfileImgPreview" src="" alt="Profile Image" style="max-width: 150px; border-radius: 50%; ">
-            <h3 id="resumeFullName" style="margin-top: 10px;"></h3>
+            
           </div>
           <div style="flex: 2; margin-left: 20px;">
+            <p id="resumeFullName"></p> 
            <p id="resumeEmail"></p>
             <p id="resumePhone"></p>
             <p id="resumeLocation"></p>
@@ -148,19 +149,19 @@
     }
 
     document.getElementById('fullName').addEventListener('input', function () {
-      document.getElementById('resumeFullName').textContent = this.value;
+      document.getElementById('resumeFullName').textContent = "Name - "+this.value;
     });
 
     document.getElementById('email').addEventListener('input', function () {
-      document.getElementById('resumeEmail').textContent = this.value;
+      document.getElementById('resumeEmail').textContent = "Email - "+this.value;
     });
 
     document.getElementById('phone').addEventListener('input', function () {
-      document.getElementById('resumePhone').textContent = this.value;
+      document.getElementById('resumePhone').textContent = "Phone - "+this.value;
     });
 
     document.getElementById('location').addEventListener('input', function () {
-      document.getElementById('resumeLocation').textContent = this.value;
+      document.getElementById('resumeLocation').textContent ="Location - "+ this.value;
     });
 
     document.getElementById('summary').addEventListener('input', function () {
@@ -225,17 +226,7 @@
       reader.readAsDataURL(file);
     });
 
-    // function printResume() {
-    //   const resumeContent = document.getElementById('resumeContent');
-    //   const inputFields = document.querySelectorAll('.input-section, .print-btn');
-    //   inputFields.forEach(el => el.style.display = 'none');
-    //   resumeContent.style.display = 'block';
-
-    //   window.print();
-
-    //   inputFields.forEach(el => el.style.display = 'block');
-    //   resumeContent.style.display = 'none';
-    // }
+    
 
     function printResume() {
         
@@ -259,10 +250,8 @@
     // Auto-download the PDF
     pdf.save('resume.pdf');
     
-    // window.print();
-    // Reset the display after printing
-    inputFields.forEach(el => el.style.display = 'block');
-    resumeContent.style.display = 'none';
+    
+    
   });
 }
 
