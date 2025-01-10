@@ -3,26 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dynamic Resume Builder</title>
+  <!-- <title>Dynamic Resume Builder</title> -->
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
   <script src="script.js"></script>
 </head>
 <body>
-  <h1>Dynamic Resume Builder</h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+  <h1>Resume Builder</h1>
   <div class="container">
     <div class="input-section">
       <div class="section">
         <h2 class="section-title">Personal Information</h2>
         <div class="two-col-layout">
           <div class="col">
-            <input type="text" id="fullName" placeholder="Full Name" />  
+            <input type="text" id="fullName" placeholder="Full Name" />
             <input type="email" id="email" placeholder="Email" />
             <input type="tel" id="phone" placeholder="Phone" />
             <input type="text" id="location" placeholder="Location" />
             <input type="file" id="profileImage" accept="image/*" />
-            <img id="profileImgPreview" src="" alt="Profile Image" style="max-width: 150px; margin-top: 10px; display: block;">
+            <img id="profileImgPreview" src="data:image/png;base64, [BASE64_ENCODED_IMAGE]" style="max-width: 150px; margin-top: 10px; display: none; " alt="Profile Image">
+
+            <!-- <img id="profileImgPreview" src="" alt="Profile Image" style="max-width: 150px; margin-top: 10px; display: block;"> -->
           </div>
           <div class="col">
             <!-- Additional personal details will go here -->
@@ -62,17 +65,17 @@
     </div>
 
     <div class="preview-section">
-      <h2>Resume Preview</h2>
+      <h2 style="text-align: center;">Resume</h2>
       <div id="resumeContent" class="preview-content">
-        <div class="personal-details" style="background-color: #2c3e50; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+        <div class="personal-details" style="background-color: #57697a; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
           <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
-            <img id="resumeProfileImgPreview" src="" alt="Profile Image" style="max-width: 150px; border-radius: 8px;">
-            <h3 id="resumeFullName" style="margin-top: 10px;">Name -</h3>
+            <img id="resumeProfileImgPreview" src="" alt="Profile Image" style="max-width: 150px; border-radius: 50%; ">
+            <h3 id="resumeFullName" style="margin-top: 10px;"></h3>
           </div>
           <div style="flex: 2; margin-left: 20px;">
-            <p id="resumeEmail"> Email - </p>
-            <p id="resumePhone"> Phone - </p>
-            <p id="resumeLocation"> Location - </p>
+           <p id="resumeEmail"></p>
+            <p id="resumePhone"></p>
+            <p id="resumeLocation"></p>
           </div>
         </div>
         <h3>Professional Summary</h3>
@@ -222,15 +225,47 @@
       reader.readAsDataURL(file);
     });
 
+    // function printResume() {
+    //   const resumeContent = document.getElementById('resumeContent');
+    //   const inputFields = document.querySelectorAll('.input-section, .print-btn');
+    //   inputFields.forEach(el => el.style.display = 'none');
+    //   resumeContent.style.display = 'block';
+
+    //   window.print();
+
+    //   inputFields.forEach(el => el.style.display = 'block');
+    //   resumeContent.style.display = 'none';
+    // }
+
     function printResume() {
-      const resume = document.getElementById('resumeContent');
-      html2canvas(resume).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF.jsPDF();
-        pdf.addImage(imgData, 'PNG', 0, 0);
-        pdf.save('Resume.pdf');
-      });
-    }
+        
+  const resumeContent = document.getElementById('resumeContent');
+  const inputFields = document.querySelectorAll('.input-section, .print-btn');
+  
+  // Hide all non-essential sections
+  inputFields.forEach(el => el.style.display = 'none');
+  
+  // Show the resume content for printing
+  resumeContent.style.display = 'block';
+  
+  // Use html2canvas to capture the visual content, including styles
+  html2canvas(resumeContent, {
+  }).then(canvas => {
+    const pdf = new jsPDF();
+    const imgData = canvas.toDataURL('image/jpeg');
+    // pdf.autoPrint();
+    pdf.addImage(imgData, 'JPEG', 10, 10, 190, 280); // Assuming A4 size page
+    
+    // Auto-download the PDF
+    pdf.save('resume.pdf');
+    
+    // window.print();
+    // Reset the display after printing
+    inputFields.forEach(el => el.style.display = 'block');
+    resumeContent.style.display = 'none';
+  });
+}
+
   </script>
 </body>
 </html>
