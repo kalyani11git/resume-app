@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Resume Builder</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.4.0/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</head>
+<body>
+  <h1>Dynamic Resume Builder</h1>
+  <div class="container">
+    <div class="input-section">
+      <div class="section">
+        <h2 class="section-title">Personal Information</h2>
+        <div class="two-col-layout">
+          <div class="col">
+            <input type="text" id="fullName" placeholder="Full Name" />  
+            <input type="email" id="email" placeholder="Email" />
+            <input type="tel" id="phone" placeholder="Phone" />
+            <input type="text" id="location" placeholder="Location" />
+            <input type="file" id="profileImage" accept="image/*" />
+            <img id="profileImgPreview" src="" alt="Profile Image" style="max-width: 150px; margin-top: 10px; display: block;">
+          </div>
+          <div class="col">
+            <!-- Additional personal details will go here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Professional Summary</h2>
+        <textarea id="summary" placeholder="Write a brief professional summary..."></textarea>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Work Experience</h2>
+        <div id="experienceInputs" class="dynamic-inputs"></div>
+        <button onclick="addExperience()">Add Experience</button>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Education</h2>
+        <div id="educationInputs" class="dynamic-inputs"></div>
+        <button onclick="addEducation()">Add Education</button>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Certifications</h2>
+        <div id="certificationInputs" class="dynamic-inputs"></div>
+        <button onclick="addCertification()">Add Certification</button>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Projects</h2>
+        <div id="projectInputs" class="dynamic-inputs"></div>
+        <button onclick="addProject()">Add Project</button>
+      </div>
+
+    </div>
+
+    <div class="preview-section">
+      <h2>Resume Preview</h2>
+      <div id="resumeContent" class="preview-content">
+        <div class="personal-details" style="background-color: #2c3e50; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <img id="resumeProfileImgPreview" src="" alt="Profile Image" style="max-width: 150px; border-radius: 8px;">
+            <h3 id="resumeFullName" style="margin-top: 10px;">Name -</h3>
+          </div>
+          <div style="flex: 2; margin-left: 20px;">
+            <p id="resumeEmail"> Email - </p>
+            <p id="resumePhone"> Phone - </p>
+            <p id="resumeLocation"> Location - </p>
+          </div>
+        </div>
+        <h3>Professional Summary</h3>
+        <p id="resumeSummary"></p>
+        <h3>Work Experience</h3>
+        <div id="resumeExperience"></div>
+        <h3>Education</h3>
+        <div id="resumeEducation"></div>
+        <h3>Certifications</h3>
+        <div id="resumeCertifications"></div>
+        <h3>Projects</h3>
+        <div id="resumeProjects"></div>
+      </div>
+      <button onclick="printResume()" class="print-btn">Print Resume</button>
+    </div>
+  </div>
+
+  <script>
+    // Example functions to add dynamic inputs
+    function addExperience() {
+      const experienceDiv = document.createElement('div');
+      experienceDiv.classList.add('input-group');
+      experienceDiv.innerHTML = `
+        <input type="text" placeholder="Company" />
+        <input type="text" placeholder="Role" />
+        <input type="text" placeholder="Duration" />
+        <button onclick="removeInput(this)">Remove</button>
+      `;
+      document.getElementById('experienceInputs').appendChild(experienceDiv);
+    }
+
+    function addEducation() {
+      const educationDiv = document.createElement('div');
+      educationDiv.classList.add('input-group');
+      educationDiv.innerHTML = `
+        <input type="text" placeholder="School" />
+        <input type="text" placeholder="Degree" />
+        <input type="text" placeholder="Graduation Year" />
+        <button onclick="removeInput(this)">Remove</button>
+      `;
+      document.getElementById('educationInputs').appendChild(educationDiv);
+    }
+
+    function addCertification() {
+      const certificationDiv = document.createElement('div');
+      certificationDiv.classList.add('input-group');
+      certificationDiv.innerHTML = `
+        <input type="text" placeholder="Certification" />
+        <input type="text" placeholder="Issued By" />
+        <input type="text" placeholder="Year" />
+        <button onclick="removeInput(this)">Remove</button>
+      `;
+      document.getElementById('certificationInputs').appendChild(certificationDiv);
+    }
+
+    function addProject() {
+      const projectDiv = document.createElement('div');
+      projectDiv.classList.add('input-group');
+      projectDiv.innerHTML = `
+        <input type="text" placeholder="Project Name" />
+        <input type="text" placeholder="Description" />
+        <input type="text" placeholder="Technologies" />
+        <button onclick="removeInput(this)">Remove</button>
+      `;
+      document.getElementById('projectInputs').appendChild(projectDiv);
+    }
+
+    function removeInput(element) {
+      element.parentElement.remove();
+    }
+
+    document.getElementById('fullName').addEventListener('input', function () {
+      document.getElementById('resumeFullName').textContent = this.value;
+    });
+
+    document.getElementById('email').addEventListener('input', function () {
+      document.getElementById('resumeEmail').textContent = this.value;
+    });
+
+    document.getElementById('phone').addEventListener('input', function () {
+      document.getElementById('resumePhone').textContent = this.value;
+    });
+
+    document.getElementById('location').addEventListener('input', function () {
+      document.getElementById('resumeLocation').textContent = this.value;
+    });
+
+    document.getElementById('summary').addEventListener('input', function () {
+      document.getElementById('resumeSummary').textContent = this.value;
+    });
+
+    document.getElementById('experienceInputs').addEventListener('input', function () {
+      const experiences = document.querySelectorAll('#experienceInputs .input-group');
+      const experienceDiv = document.getElementById('resumeExperience');
+      experienceDiv.innerHTML = '';
+      experiences.forEach(experience => {
+        const company = experience.querySelector('input[type="text"]').value;
+        const role = experience.querySelectorAll('input[type="text"]')[1].value;
+        const duration = experience.querySelectorAll('input[type="text"]')[2].value;
+        experienceDiv.innerHTML += `<p>${company} - ${role} (${duration})</p>`;
+      });
+    });
+
+    document.getElementById('educationInputs').addEventListener('input', function () {
+      const educations = document.querySelectorAll('#educationInputs .input-group');
+      const educationDiv = document.getElementById('resumeEducation');
+      educationDiv.innerHTML = '';
+      educations.forEach(education => {
+        const school = education.querySelector('input[type="text"]').value;
+        const degree = education.querySelectorAll('input[type="text"]')[1].value;
+        const year = education.querySelectorAll('input[type="text"]')[2].value;
+        educationDiv.innerHTML += `<p>${school} - ${degree} (${year})</p>`;
+      });
+    });
+
+    document.getElementById('certificationInputs').addEventListener('input', function () {
+      const certifications = document.querySelectorAll('#certificationInputs .input-group');
+      const certificationDiv = document.getElementById('resumeCertifications');
+      certificationDiv.innerHTML = '';
+      certifications.forEach(certification => {
+        const name = certification.querySelector('input[type="text"]').value;
+        const issuer = certification.querySelectorAll('input[type="text"]')[1].value;
+        const year = certification.querySelectorAll('input[type="text"]')[2].value;
+        certificationDiv.innerHTML += `<p>${name} by ${issuer} (${year})</p>`;
+      });
+    });
+
+    document.getElementById('projectInputs').addEventListener('input', function () {
+      const projects = document.querySelectorAll('#projectInputs .input-group');
+      const projectDiv = document.getElementById('resumeProjects');
+      projectDiv.innerHTML = '';
+      projects.forEach(project => {
+        const name = project.querySelector('input[type="text"]').value;
+        const description = project.querySelectorAll('input[type="text"]')[1].value;
+        const technologies = project.querySelectorAll('input[type="text"]')[2].value;
+        projectDiv.innerHTML += `<p>${name} - ${description} (${technologies})</p>`;
+      });
+    });
+
+    document.getElementById('profileImage').addEventListener('change', function () {
+      const file = this.files[0];
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('profileImgPreview').src = e.target.result;
+        document.getElementById('resumeProfileImgPreview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function printResume() {
+      const resume = document.getElementById('resumeContent');
+      html2canvas(resume).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF.jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        pdf.save('Resume.pdf');
+      });
+    }
+  </script>
+</body>
+</html>
